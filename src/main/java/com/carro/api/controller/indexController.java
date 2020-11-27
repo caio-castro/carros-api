@@ -10,7 +10,7 @@ public class indexController {
 
 	@GetMapping
 	public String hello() {
-		return "Oi Spring Boot";
+		return "Carros API" ;
 	}
 	
 }
