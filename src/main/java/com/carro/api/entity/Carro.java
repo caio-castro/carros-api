@@ -1,17 +1,27 @@
 package com.carro.api.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Carro {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String nome;
+    private String nome;
+	private String tipo;
 	
 	public Carro() {
+	
 	}
 
-	public Carro(Long id, String nome) {
-		super();
+	public Carro(Long id, String nome, String tipo) {
 		this.id = id;
 		this.nome = nome;
+		this.tipo = tipo;
 	}
 
 	public Long getId() {
@@ -30,9 +40,12 @@ public class Carro {
 		this.nome = nome;
 	}
 
-	@Override
-	public String toString() {
-		return "Carro [id=" + id + ", nome=" + nome + "]";
+	public String getTipo() {
+		return tipo;
 	}
-		
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+	
 }
