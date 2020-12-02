@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.carro.api.dto.CarroDto;
 import com.carro.api.entity.Carro;
 import com.carro.api.services.Imp.CarroServiceImp;
 
@@ -26,7 +26,7 @@ public class CarroController {
 	private CarroServiceImp carroServiceImp;
 	
 	@GetMapping
-	public ResponseEntity<Iterable<Carro>> getListCarros(){
+	public ResponseEntity<List<CarroDto>> getListCarros(){
 		 return ResponseEntity.ok(carroServiceImp.listaCarros());
 		//return  new ResponseEntity<>(carroServiceImp.listaCarros(),HttpStatus.OK);
 	}
@@ -43,9 +43,9 @@ public class CarroController {
 	}
 	
 	@GetMapping("/tipo/{tipo}")
-	public ResponseEntity<List<Carro>> getCarroByTipo(@PathVariable("tipo") String tipo){
+	public ResponseEntity<List<CarroDto>> getCarroByTipo(@PathVariable("tipo") String tipo){
 		
-		 List<Carro> ListaCarros = carroServiceImp.listaTipoCarro(tipo);
+		 List<CarroDto> ListaCarros = carroServiceImp.listaTipoCarro(tipo);
 		
 		    if (ListaCarros.isEmpty()) {
 		    	return ResponseEntity.noContent().build();
