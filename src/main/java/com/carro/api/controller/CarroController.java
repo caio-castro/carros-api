@@ -1,5 +1,6 @@
 package com.carro.api.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.carro.api.dto.CarroDto;
 import com.carro.api.entity.Carro;
@@ -32,8 +34,8 @@ public class CarroController {
 	}
 	
 	@GetMapping("/{id}")
-	public  ResponseEntity<Carro> getCarroById(@PathVariable("id") Long id){
-		  Optional<Carro> optionalCarro = carroServiceImp.carroById(id);
+	public  ResponseEntity<CarroDto> getCarroById(@PathVariable("id") Long id){
+		  Optional<CarroDto> optionalCarro = carroServiceImp.carroById(id);
 		  
 		  if (optionalCarro.isPresent()) {
 			 return ResponseEntity.ok(optionalCarro.get());
@@ -54,19 +56,54 @@ public class CarroController {
 		    }
 	}
 	
+	
+	private URI getUri(Long id) {
+        return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(id).toUri();
+    }
+	
 	@PostMapping
-	public void adicionarCarro(@RequestBody Carro carro) {
-		   carroServiceImp.adiocionarCarro(carro);
+	public ResponseEntity adicionarCarro(@RequestBody Carro carro) {
+		
+		try {
+			CarroDto carrodto =  carroServiceImp.adiocionarCarro(carro);
+			
+			 URI location = getUri(carrodto.getId());
+	        return ResponseEntity.created(location).build();
+	        
+		} catch (Exception ex) {
+		 return	ResponseEntity.badRequest().build();
+		}
 	}
 	
 	@DeleteMapping("/{id}")
-	public void deletarCarro(@PathVariable("id")Long id) {
-		   carroServiceImp.deletarCarro(id);
+	public ResponseEntity deletarCarro(@PathVariable("id")Long id) {
+		
+		try {
+			boolean ok = carroServiceImp.deletarCarro(id);
+			
+			if (ok) {
+				return ResponseEntity.ok(ok);	
+			}else {
+				return ResponseEntity.notFound().build();	
+			}	
+		} catch (Exception ex) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 	
 	@PutMapping("/{id}")
 	public void atualizarCarro(@PathVariable("id")Long id, @RequestBody Carro carro) {
-		   carroServiceImp.AtualizarCarro(id, carro);;
+		
+		carro.setId(id);
+
+		CarroDto c = carroServiceImp.AtualizarCarro(carro, id);
+
+		if (c != null) {
+			ResponseEntity.ok(c);	
+		}else {
+			ResponseEntity.notFound().build();	
+		}
 	}
 
 	

@@ -1,5 +1,7 @@
 package com.carro.api.dto;
 
+import org.modelmapper.ModelMapper;
+
 import com.carro.api.entity.Carro;
 
 public class CarroDto {
@@ -9,7 +11,6 @@ public class CarroDto {
 	private String tipo;
 	
 	public CarroDto() {
-		super();
 	}
 	
 	public CarroDto(Long id, String nome, String tipo) {
@@ -18,12 +19,18 @@ public class CarroDto {
 		this.tipo = tipo;
 	}
 	
+	
 	public CarroDto(Carro carro) {
 		this.id = carro.getId();
 		this.nome = carro.getNome();
 		this.tipo = carro.getTipo();
 	}
-
+  
+	 public static CarroDto create(Carro carro) {
+	        ModelMapper modelMapper = new ModelMapper();
+	        return modelMapper.map(carro, CarroDto.class);
+	    }
+	
 	public Long getId() {
 		return id;
 	}
